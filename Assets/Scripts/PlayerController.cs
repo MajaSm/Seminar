@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _isPlayerAbleToMove = false;
+        SetIsPlayerAbleToMove(false);
     }
    
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
         }
         _rb.velocity = new Vector3(_rb.velocity.x, _rb.velocity.y, _speed * _horizontalInput);  
         
-        //GetInputFromKeyboard();
+        GetInputFromKeyboard();
     }
 
     private void GetInputFromKeyboard()
@@ -70,6 +70,8 @@ public class PlayerController : MonoBehaviour
     public void SetIsPlayerAbleToMove(bool canMove)
     {
         _isPlayerAbleToMove = canMove;
+
+        _rb.isKinematic = !_isPlayerAbleToMove;
     }
 
     public void SetSpeed( float speed)
@@ -81,13 +83,18 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "KillPlayer")
         {
-            UIManager.Instance.OnPlayerDeath();
+            GameManager.Instance.OnPlayerDeath();
             Debug.Log("Player Killed");
         }
         if (other.tag == "Finish")
         {
-            UIManager.Instance.OnPlayerFinish();
+            GameManager.Instance.OnPlayerFinish();
             Debug.Log("You are finish this level!");
         }
+    }
+    public void OnResetPlayer()
+    {
+        transform.position = Vector3.zero;
+        SetIsPlayerAbleToMove(false);
     }
 }

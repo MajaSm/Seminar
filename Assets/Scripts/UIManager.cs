@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
@@ -12,8 +13,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _deadPanel;
     [SerializeField] private GameObject _finishPanel;
     [SerializeField] private GameObject _startPanel;
+    [SerializeField] private GameObject _levelPanel;
+    [SerializeField] private PlayerController _player;
+    [SerializeField] private List<Button> _levelButtons;
     public static UIManager Instance;
-    [SerializeField] private PlayerController _player; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +25,7 @@ public class UIManager : MonoBehaviour
         _deadPanel.SetActive(false);
         _finishPanel.SetActive(false);
         _startPanel.SetActive(true);
+        _levelPanel.SetActive(false);
     }
     public void OnButtonJump()
     {
@@ -41,7 +46,8 @@ public class UIManager : MonoBehaviour
     }
     public void OnReplayButtonPressed()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.OnReplayLevel();
+        _deadPanel.SetActive(false);
     }
 
     public void OnExitButtonPressed()
@@ -50,10 +56,43 @@ public class UIManager : MonoBehaviour
     }
     public void OnStartButtonPressed()
     {
-        _startPanel.SetActive(false);
-        _player.SetIsPlayerAbleToMove(true);
-    }
 
+        _startPanel.SetActive(false);
+
+        GameManager.Instance.SelectCurrentLevel();
+
+    }
+    public void OnLevelButtonPressed()
+    {
+        int lastCompletedLevel = -1;
+        if (PlayerPrefs.HasKey("LastFinishedLevel"))
+            lastCompletedLevel = PlayerPrefs.GetInt("LastFinishedLevel");
+
+        _startPanel.SetActive(false);
+        for(int i = 0;i<_levelButtons.Count;i++)
+        {
+            _levelButtons[i].interactable = false;
+
+        }
+        for (int i = 0; i < lastCompletedLevel+2; i++)
+        {
+            
+            _levelButtons[i].interactable = true;
+
+        }
+        _levelPanel.SetActive(true);
+
+    }
+    public void OnLevelSelected(int lvlIndex)
+    {
+        GameManager.Instance.LevelSelected(lvlIndex);
+
+        _levelPanel.SetActive(false);
+    }
+    public void OnButtonNext()
+    {
+        GameManager.Instance.OnNextLevel();
+    }
     IEnumerator PopUpPanel(Transform panelTransform)
     {
         panelTransform.localScale = new Vector3(0,0,1);

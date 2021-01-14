@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     }
     public void OnNextLevel()
     {
+        _playerController.OnResetPlayer();
         _levelSpawner.LevelSelected(_currentLevel + 1);
     }
 }

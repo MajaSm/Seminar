@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
     }
     public void OnLevelButtonPressed()
     {
+        _levelPanel.SetActive(true);
         int lastCompletedLevel = -1;
         if (PlayerPrefs.HasKey("LastFinishedLevel"))
             lastCompletedLevel = PlayerPrefs.GetInt("LastFinishedLevel");
@@ -80,7 +81,7 @@ public class UIManager : MonoBehaviour
             _levelButtons[i].interactable = true;
 
         }
-        _levelPanel.SetActive(true);
+        
 
     }
     public void OnLevelSelected(int lvlIndex)
@@ -92,6 +93,7 @@ public class UIManager : MonoBehaviour
     public void OnButtonNext()
     {
         GameManager.Instance.OnNextLevel();
+        _finishPanel.SetActive(false);
     }
     IEnumerator PopUpPanel(Transform panelTransform)
     {

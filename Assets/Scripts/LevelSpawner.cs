@@ -11,6 +11,7 @@ public class LevelSpawner : MonoBehaviour
 
     public void LevelSelected(int lvlIndex)
     {
+
         _spawnedLevel = Instantiate(_levels[lvlIndex]);
 
         _player.SetIsPlayerAbleToMove(true);
